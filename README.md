@@ -23,3 +23,9 @@ The above will run the Spring Boot app "myapp.groovy" (assumed to be in the work
 Hit <TAB> to have commands and their options completed for you, just like you're familiar with in a BASH shell.
 
 The Spring Boot shell supports multiple lines of text. Use the double left-caret character `<<` to start a continuation. Enter text into the shell spanning multiple lines and then complete the text with a carriage return on an empty line. While you're in continuation mode, the prompt will change to `...`.
+
+You can run commands in the shell by using the bang `!` command. For example, to list the files in the current working directory, do:
+
+		$ ! ls -la
+
+Useful for catting log files and interrogating output produced by your application.
