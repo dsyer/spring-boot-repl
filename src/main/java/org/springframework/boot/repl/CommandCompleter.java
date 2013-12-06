@@ -77,7 +77,7 @@ public class CommandCompleter extends StringsCompleter {
 						for(String s : optHelp.getOptions()) {
 							cols.add(s);
 						}
-						String opts = StringUtils.collectionToDelimitedString(cols, "|");
+						String opts = StringUtils.collectionToDelimitedString(cols, " | ");
 						if(opts.length() > maxSize) {
 							maxSize = opts.length();
 						}

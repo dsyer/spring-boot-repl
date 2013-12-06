@@ -3,7 +3,6 @@ package org.springframework.boot.repl;
 import jline.console.ConsoleReader;
 import jline.console.completer.CandidateListCompletionHandler;
 import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.cli.Command;
 import org.springframework.boot.cli.CommandFactory;
 import org.springframework.boot.cli.SpringCli;
@@ -22,7 +21,6 @@ import java.util.ServiceLoader;
 /**
  * @author Jon Brisbin
  */
-@EnableAutoConfiguration
 public class Shell {
 
 	public static void main(String... args) throws IOException {
