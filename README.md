@@ -12,6 +12,8 @@ This creates an executable jar that you can run from the command line using `jav
 
 		java -jar target/spring-boot-repl-1.0.0.BUILD-SNAPSHOT.jar
 
+You can quit shell by issuing the `quit` command.
+
 ### Using the shell
 
 To use the shell, you type the commands for the Spring Boot CLI like you would if you were running it with the `spring` command:
