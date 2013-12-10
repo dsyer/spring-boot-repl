@@ -1,6 +1,9 @@
 .DS_Store
 .idea
 *.i*
+.classpath
+.project
+.settings/
 build
 target
 out
