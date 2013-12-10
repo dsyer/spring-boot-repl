@@ -1,37 +1,40 @@
 package org.springframework.boot.repl;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.ServiceLoader;
+
 import jline.console.ConsoleReader;
 import jline.console.completer.ArgumentCompleter;
 import jline.console.completer.Completer;
 import jline.console.completer.NullCompleter;
 import jline.console.completer.StringsCompleter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
 import org.springframework.boot.cli.Command;
 import org.springframework.boot.cli.CommandFactory;
+import org.springframework.boot.cli.Log;
 import org.springframework.boot.cli.OptionHelp;
+import org.springframework.boot.cli.SpringCli;
 import org.springframework.util.StringUtils;
-
-import java.io.IOException;
-import java.util.*;
 
 /**
  * @author Jon Brisbin
  */
 public class CommandCompleter extends StringsCompleter {
 
-	private static final Logger LOG = LoggerFactory.getLogger(CommandCompleter.class);
-
 	private final Map<String, Completer> optionCompleters = new HashMap<>();
 	private       List<Command>          commands         = new ArrayList<>();
 	private ConsoleReader console;
 	private String        lastBuffer;
 
-	public CommandCompleter(ConsoleReader console) {
+	public CommandCompleter(ConsoleReader console, SpringCli cli) {
 		this.console = console;
 
 		for(CommandFactory fac : ServiceLoader.load(CommandFactory.class, getClass().getClassLoader())) {
-			commands.addAll(fac.getCommands());
+			commands.addAll(fac.getCommands(cli));
 		}
 
 		List<String> names = new ArrayList<>();
@@ -101,7 +104,7 @@ public class CommandCompleter extends StringsCompleter {
 
 					console.drawLine();
 				} catch(IOException e) {
-					LOG.error(e.getMessage(), e);
+					Log.error(e.getMessage() + " (" + e.getClass().getName() + ")");
 				}
 			}
 			Completer completer = optionCompleters.get(c.getName());
