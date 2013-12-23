@@ -34,7 +34,7 @@ public class ShellCommandFactory implements CommandFactory {
 
 	@Override
 	public Collection<Command> getCommands(SpringCli cli) {
-		List<Command> commands = new ArrayList<>();
+		List<Command> commands = new ArrayList<Command>();
 		for (CommandFactory factory : ServiceLoader.load(CommandFactory.class,
 				Shell.class.getClassLoader())) {
 			if (!(factory instanceof ShellCommandFactory)) {

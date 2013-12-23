@@ -25,8 +25,8 @@ import org.springframework.util.StringUtils;
  */
 public class CommandCompleter extends StringsCompleter {
 
-	private final Map<String, Completer> optionCompleters = new HashMap<>();
-	private       List<Command>          commands         = new ArrayList<>();
+	private final Map<String, Completer> optionCompleters = new HashMap<String, Completer>();
+	private       List<Command>          commands         = new ArrayList<Command>();
 	private ConsoleReader console;
 	private String        lastBuffer;
 
@@ -37,10 +37,10 @@ public class CommandCompleter extends StringsCompleter {
 			commands.addAll(fac.getCommands(cli));
 		}
 
-		List<String> names = new ArrayList<>();
+		List<String> names = new ArrayList<String>();
 		for(Command c : commands) {
 			names.add(c.getName());
-			List<String> opts = new ArrayList<>();
+			List<String> opts = new ArrayList<String>();
 			for(OptionHelp optHelp : c.getOptionsHelp()) {
 				opts.addAll(optHelp.getOptions());
 			}
@@ -73,10 +73,10 @@ public class CommandCompleter extends StringsCompleter {
 					console.println();
 					console.println("Usage:");
 					console.println(c.getName() + " " + c.getUsageHelp());
-					List<List<String>> rows = new ArrayList<>();
+					List<List<String>> rows = new ArrayList<List<String>>();
 					int maxSize = 0;
 					for(OptionHelp optHelp : c.getOptionsHelp()) {
-						List<String> cols = new ArrayList<>();
+						List<String> cols = new ArrayList<String>();
 						for(String s : optHelp.getOptions()) {
 							cols.add(s);
 						}

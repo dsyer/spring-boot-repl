@@ -10,8 +10,10 @@ import java.util.List;
 import jline.console.ConsoleReader;
 import jline.console.completer.CandidateListCompletionHandler;
 
+import org.codehaus.groovy.runtime.ProcessGroovyMethods;
 import org.springframework.boot.cli.SpringCli;
 import org.springframework.boot.cli.command.AbstractCommand;
+import org.springframework.util.ReflectionUtils;
 import org.springframework.util.StringUtils;
 
 /**
@@ -61,7 +63,7 @@ public class ShellCommand extends AbstractCommand {
 					console.clearScreen();
 					continue;
 				}
-				List<String> parts = new ArrayList<>();
+				List<String> parts = new ArrayList<String>();
 
 				if (line.contains("<<")) {
 					int startMultiline = line.indexOf("<<");
@@ -116,9 +118,16 @@ public class ShellCommand extends AbstractCommand {
 					if (line.trim().startsWith("!")) {
 						try {
 							ProcessBuilder pb = new ProcessBuilder(parts);
-							pb.inheritIO();
+							if (isJava7()) {
+								inheritIO(pb);
+							}
 							pb.environment().putAll(System.getenv());
-							pb.start().waitFor();
+							Process process = pb.start();
+							if (!isJava7()) {
+								ProcessGroovyMethods.consumeProcessOutput(process,
+										(OutputStream) sysout, (OutputStream) syserr);
+							}
+							process.waitFor();
 						} catch (Exception e) {
 							e.printStackTrace();
 						}
@@ -138,6 +147,17 @@ public class ShellCommand extends AbstractCommand {
 			console.shutdown();
 
 		}
+	}
+
+	private void inheritIO(ProcessBuilder pb) {
+		ReflectionUtils.invokeMethod(ReflectionUtils.findMethod(ProcessBuilder.class, "inheritIO"), pb);
+	}
+
+	private boolean isJava7() {
+		if (ReflectionUtils.findMethod(ProcessBuilder.class, "inheritIO") != null) {
+			return true;
+		}
+		return false;
 	}
 
 }
