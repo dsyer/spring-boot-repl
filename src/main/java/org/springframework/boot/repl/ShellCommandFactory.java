@@ -45,7 +45,9 @@ public class ShellCommandFactory implements CommandFactory {
 				}
 			}
 		}
-		commands.add(new ShellCommand(cli));
+		ShellCommand shell = new ShellCommand(cli);
+		commands.add(shell);
+		commands.add(new PromptCommand(shell));
 		return commands;
 	}
 

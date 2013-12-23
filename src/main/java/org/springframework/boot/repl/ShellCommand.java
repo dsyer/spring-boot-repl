@@ -6,6 +6,7 @@ import java.io.OutputStream;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Stack;
 
 import jline.console.ConsoleReader;
 import jline.console.completer.CandidateListCompletionHandler;
@@ -22,7 +23,10 @@ import org.springframework.util.StringUtils;
  */
 public class ShellCommand extends AbstractCommand {
 
+	private static final String DEFAULT_PROMPT = "$ ";
 	private SpringCli springCli;
+	private String prompt = DEFAULT_PROMPT;
+	private Stack<String> prompts = new Stack<String>();
 
 	public ShellCommand(SpringCli springCli) {
 		super("shell", "Start a nested shell (REPL).");
@@ -56,7 +60,7 @@ public class ShellCommand extends AbstractCommand {
 
 		try {
 
-			while (null != (line = console.readLine("$ "))) {
+			while (null != (line = console.readLine(prompt))) {
 				if ("quit".equals(line.trim())) {
 					break;
 				} else if ("clear".equals(line.trim())) {
@@ -149,8 +153,23 @@ public class ShellCommand extends AbstractCommand {
 		}
 	}
 
+	public void pushPrompt(String prompt) {
+		prompts.push(this.prompt);
+		this.prompt = prompt;
+	}
+
+	public String popPrompt() {
+		if (prompts.isEmpty()) {
+			this.prompt = DEFAULT_PROMPT;
+		} else {
+			this.prompt = prompts.pop();
+		}
+		return this.prompt;
+	}
+
 	private void inheritIO(ProcessBuilder pb) {
-		ReflectionUtils.invokeMethod(ReflectionUtils.findMethod(ProcessBuilder.class, "inheritIO"), pb);
+		ReflectionUtils.invokeMethod(
+				ReflectionUtils.findMethod(ProcessBuilder.class, "inheritIO"), pb);
 	}
 
 	private boolean isJava7() {
